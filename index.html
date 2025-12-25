@@ -1,81 +1,147 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Andhra Avakaya – Non Veg Pickles</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andhra Avakaya</title>
 
 <style>
-body{font-family:Arial;background:#fff3cc;margin:0;padding:15px}
-
-/* BRANDING */
-.brand-header{
-  background:linear-gradient(90deg,#7a1c00,#b22222);
-  padding:18px;
-  border-radius:12px;
-  margin-bottom:20px;
-}
-.brand-box{
-  display:flex;
-  align-items:center;
-  gap:15px;
-  justify-content:center;
-}
-.logo{
-  width:80px;height:80px;border-radius:50%;
-  background:#fff;padding:5px;
-}
-.brand-header h1{
-  margin:0;font-size:32px;color:#ffdd55;
-}
-.brand-header p{
-  margin:0;color:#fff3c4;font-size:14px;
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#fff4d6;
 }
 
-/* MENU */
-.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+/* HEADER */
+header{
+  background:#b22222;
+  color:#fff;
+  padding:20px;
+  text-align:center;
+}
+header h1{
+  margin:0;
+  font-size:36px;
+  color:#ffd966;
+}
+header p{
+  margin:5px 0 0;
+}
+
+/* MENU GRID */
+.container{
+  padding:25px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+}
 .card{
-  background:#fff;border-radius:12px;padding:10px;
-  box-shadow:0 2px 6px rgba(0,0,0,.2);
-  text-align:center
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);
+  padding:10px;
+  text-align:center;
 }
 .card img{
-  width:100%;height:140px;object-fit:cover;border-radius:10px
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  border-radius:10px;
 }
-select,button,input{
-  width:100%;padding:8px;margin-top:8px
+select{
+  width:100%;
+  padding:8px;
+  margin-top:8px;
 }
 
-/* CART */
-#cart{
-  background:#ffe599;margin-top:25px;
-  padding:15px;border-radius:12px
+/* CART BUTTON */
+.cart-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  color:#fff;
+  padding:14px 20px;
+  border-radius:30px;
+  font-size:18px;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,.3);
+}
+
+/* POPUP CART */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  z-index:999;
+}
+.modal-content{
+  background:#fff;
+  max-width:380px;
+  margin:8% auto;
+  padding:20px;
+  border-radius:16px;
+}
+.modal h3{
+  margin-top:0;
+  display:flex;
+  justify-content:space-between;
+}
+.close{
+  cursor:pointer;
+  font-size:22px;
 }
 .cart-item{
-  display:flex;justify-content:space-between
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6px;
 }
-.remove{color:red;cursor:pointer}
+input,button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+}
 button{
-  background:#25D366;color:#fff;
-  border:none;border-radius:8px;font-size:16px
+  background:#25D366;
+  border:none;
+  color:#fff;
+  font-size:16px;
+  border-radius:8px;
+}
+.remove{
+  color:red;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<!-- BRAND HEADER -->
-<header class="brand-header">
-  <div class="brand-box">
-    <img src="images/logo.png" class="logo">
-    <div>
-      <h1>Andhra Avakaya</h1>
-      <p>Authentic Godavari Konaseema Non-Veg Pickles</p>
-    </div>
-  </div>
+<header>
+  <h1>Andhra Avakaya</h1>
+  <p>Authentic Godavari Konaseema Non-Veg Pickles</p>
 </header>
 
-<!-- MENU -->
-<div class="menu">
+<div class="container">
+  <div class="grid" id="menu"></div>
+</div>
+
+<div class="cart-btn" onclick="openCart()">🛒 Cart</div>
+
+<!-- POPUP CART -->
+<div class="modal" id="cartModal">
+  <div class="modal-content">
+    <h3>🛒 Your Cart <span class="close" onclick="closeCart()">❌</span></h3>
+    <div id="cartItems"></div>
+    <h4>Total ₹<span id="total">0</span></h4>
+    <input id="name" placeholder="Your Name">
+    <input id="phone" placeholder="Mobile Number">
+    <button onclick="order()">📲 Order on WhatsApp</button>
+  </div>
+</div>
 
 <script>
 const items=[
@@ -102,43 +168,25 @@ const items=[
 ["Royya Karapodi",[500,1000,2000]]
 ];
 
-document.write(items.map(i=>`
+let cart=[],total=0;
+
+document.getElementById("menu").innerHTML=
+items.map(i=>`
 <div class="card">
 <img src="https://source.unsplash.com/400x300/?${i[0]} food">
-<h3>${i[0]}</h3>
-<select onchange="addToCart('${i[0]}',this.value)">
+<h4>${i[0]}</h4>
+<select onchange="add('${i[0]}',this.value)">
 <option value="">Select Quantity</option>
 <option value="${i[1][0]}">250g – ₹${i[1][0]}</option>
 <option value="${i[1][1]}">500g – ₹${i[1][1]}</option>
 <option value="${i[1][2]}">1kg – ₹${i[1][2]}</option>
 </select>
-</div>`).join(""));
-</script>
+</div>`).join("");
 
-</div>
-
-<!-- CART -->
-<div id="cart">
-<h3>🛒 Your Cart</h3>
-<div id="cartItems"></div>
-<h4>Total ₹<span id="total">0</span></h4>
-<input id="name" placeholder="Your Name">
-<input id="phone" placeholder="Mobile Number">
-<button onclick="order()">📲 Order on WhatsApp</button>
-</div>
-
-<script>
-let cart=[],total=0;
-
-function addToCart(item,price){
+function add(item,price){
  if(!price)return;
  cart.push({item,price:Number(price)});
  total+=Number(price);
- render();
-}
-function removeItem(i){
- total-=cart[i].price;
- cart.splice(i,1);
  render();
 }
 function render(){
@@ -148,17 +196,21 @@ function render(){
   c.innerHTML+=`
   <div class="cart-item">
     <span>${x.item} – ₹${x.price}</span>
-    <span class="remove" onclick="removeItem(${i})">❌</span>
+    <span class="remove" onclick="remove(${i})">❌</span>
   </div>`;
  });
  document.getElementById("total").innerText=total;
 }
+function remove(i){
+ total-=cart[i].price;
+ cart.splice(i,1);
+ render();
+}
+function openCart(){document.getElementById("cartModal").style.display="block";}
+function closeCart(){document.getElementById("cartModal").style.display="none";}
 function order(){
  let n=name.value,p=phone.value;
- if(!n||!p||cart.length==0){
-  alert("Please fill details and add items");
-  return;
- }
+ if(!n||!p||cart.length==0){alert("Fill details");return;}
  let msg=`Order from Andhra Avakaya%0AName:${n}%0APhone:${p}%0A`;
  cart.forEach(x=>msg+=`${x.item} ₹${x.price}%0A`);
  msg+=`Total ₹${total}`;
