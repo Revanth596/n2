@@ -6,117 +6,177 @@
 <title>Andhra Avakaya</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#fff4d6}
-header{text-align:center;background:#b22222;color:#ffd966;padding:20px}
-header p{color:#fff;margin:5px 0 0}
+body{
+ margin:0;font-family:'Segoe UI',Arial;background:#f6e6c8;
+}
 
+/* HEADER */
+.header{
+ background:#b22222;color:#ffd966;
+ padding:25px;text-align:center;
+}
+.header p{color:#fff;margin-top:6px}
+
+/* TITLE */
+.section-title{
+ text-align:center;margin:25px 0;
+ font-size:22px;color:#7a1c00;
+}
+
+/* GRID */
 .container{padding:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-.card{background:#fff;border-radius:12px;padding:10px;box-shadow:0 3px 8px rgba(0,0,0,.2);text-align:center}
-.card img{width:100%;height:140px;object-fit:cover;border-radius:10px}
-select{width:100%;padding:8px;margin-top:8px}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:18px;
+}
+.card{
+ background:#fff7e6;border-radius:14px;
+ box-shadow:0 3px 8px rgba(0,0,0,.2);
+ padding:10px;text-align:center;
+}
+.card img{
+ width:100%;height:150px;
+ object-fit:cover;border-radius:10px;
+}
+.card h4{margin:8px 0;color:#7a1c00}
+select{
+ width:100%;padding:8px;border-radius:6px;
+}
 
+/* CART BUTTON */
 .cart-btn{
  position:fixed;bottom:20px;right:20px;
  background:#25D366;color:#fff;
  padding:14px 20px;border-radius:30px;
  font-size:18px;cursor:pointer;
+ box-shadow:0 4px 10px rgba(0,0,0,.3);
 }
 
+/* POPUP */
 .modal{
  display:none;position:fixed;inset:0;
  background:rgba(0,0,0,.6);z-index:999;
 }
 .modal-content{
- background:#fff;max-width:380px;
- margin:10% auto;padding:20px;
+ background:#fff;
+ max-width:400px;
+ margin:8% auto;
+ padding:20px;
  border-radius:16px;
 }
-.close{float:right;cursor:pointer;font-size:22px}
-.cart-item{display:flex;justify-content:space-between;margin-bottom:6px}
+.close{
+ float:right;font-size:22px;cursor:pointer;
+}
+.cart-item{
+ display:flex;justify-content:space-between;
+ margin-bottom:6px;
+}
 .remove{color:red;cursor:pointer}
-input,button{width:100%;padding:10px;margin-top:10px}
-button{background:#25D366;border:none;color:#fff;font-size:16px;border-radius:8px}
+input,button{
+ width:100%;padding:10px;margin-top:10px;
+}
+button{
+ background:#25D366;border:none;
+ color:#fff;font-size:16px;border-radius:8px;
+}
+
+/* QR */
+.qr{
+ text-align:center;margin-top:10px;
+}
+.qr img{
+ width:180px;border:1px solid #ccc;
+ border-radius:8px;
+}
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Andhra Avakaya</h1>
-  <p>Authentic Godavari Konaseema Non-Veg Pickles</p>
-</header>
+<div class="header">
+ <h1>Andhra Avakaya</h1>
+ <p>Authentic Godavari Konaseema Non-Veg Pickles</p>
+</div>
+
+<div class="section-title">🍗 Our Non-Veg Pickle Varieties</div>
 
 <div class="container">
-  <div class="grid" id="menu"></div>
+ <div class="grid" id="menu"></div>
 </div>
 
 <div class="cart-btn" onclick="openCart()">🛒 Cart</div>
 
+<!-- POPUP CART -->
 <div class="modal" id="cartModal">
-  <div class="modal-content">
-    <span class="close" onclick="closeCart()">❌</span>
-    <h3>Your Cart</h3>
-    <div id="cartItems"></div>
-    <h4>Total ₹<span id="total">0</span></h4>
-    <input id="name" placeholder="Your Name">
-    <input id="phone" placeholder="Mobile Number">
-    <button onclick="order()">Order on WhatsApp</button>
+ <div class="modal-content">
+  <span class="close" onclick="closeCart()">❌</span>
+  <h3>Your Cart</h3>
+  <div id="cartItems"></div>
+  <h4>Total ₹<span id="total">0</span></h4>
+
+  <input id="name" placeholder="Your Name">
+  <input id="phone" placeholder="Mobile Number">
+
+  <div class="qr">
+    <p><strong>Scan & Pay</strong></p>
+    <!-- 🔴 Replace with your QR image -->
+    <img src="https://i.imgur.com/9K0f7Yx.png" alt="Payment QR">
   </div>
+
+  <button onclick="order()">📲 Confirm on WhatsApp</button>
+ </div>
 </div>
 
 <script>
 const items=[
-["Chicken",[250,500,1000]],
-["Chicken Boneless",[300,600,1200]],
-["Chicken Keema",[350,700,1400]],
-["Prawns",[450,900,1800]],
-["Mutton Boneless",[500,1000,2000]],
-["Mutton Keema",[550,1100,2200]],
-["Tuna Fish Boneless",[400,800,1600]],
-["Apollo Fish",[450,900,1800]],
-["Lake Fish (Bone)",[350,700,1400]],
-["Korameenu",[400,800,1600]],
-["Dry Methallu Pickle",[350,700,1400]],
-["Crab Pickle",[350,700,1400]],
-["Naatukodi Bone",[450,900,1800]],
-["Naatukodi Boneless",[550,1100,2200]],
-["Chicken Gongura",[350,700,1400]],
-["Prawns Gongura",[500,1000,2000]],
-["Mutton Gongura",[550,1100,2200]],
-["Bhoti Gongura",[450,900,1800]],
-["Gongura Dry Prawns",[500,1000,2000]],
-["Pandugappa",[450,900,1800]],
-["Royya Karapodi",[500,1000,2000]]
+["Chicken","https://i.imgur.com/2cXH9Vn.jpg",[250,500,1000]],
+["Chicken Boneless","https://i.imgur.com/J8aQY8c.jpg",[300,600,1200]],
+["Chicken Keema","https://i.imgur.com/BxY1wQb.jpg",[350,700,1400]],
+["Prawns","https://i.imgur.com/2iJk6g4.jpg",[450,900,1800]],
+["Mutton Boneless","https://i.imgur.com/0j8Zy9S.jpg",[500,1000,2000]],
+["Mutton Keema","https://i.imgur.com/b5pB7QK.jpg",[550,1100,2200]],
+["Tuna Fish Boneless","https://i.imgur.com/6Tj1fKn.jpg",[400,800,1600]],
+["Apollo Fish","https://i.imgur.com/xj6HgRz.jpg",[450,900,1800]],
+["Lake Fish (Bone)","https://i.imgur.com/8Gv5nHn.jpg",[350,700,1400]],
+["Korameenu","https://i.imgur.com/ZkA8c1O.jpg",[400,800,1600]],
+["Dry Methallu Pickle","https://i.imgur.com/0xK7HfL.jpg",[350,700,1400]],
+["Crab Pickle","https://i.imgur.com/rF9gH9I.jpg",[350,700,1400]],
+["Naatukodi Bone","https://i.imgur.com/jbD6a5K.jpg",[450,900,1800]],
+["Naatukodi Boneless","https://i.imgur.com/4TxVqVQ.jpg",[550,1100,2200]],
+["Chicken Gongura","https://i.imgur.com/wmP3O1b.jpg",[350,700,1400]],
+["Prawns Gongura","https://i.imgur.com/cE5qkYo.jpg",[500,1000,2000]],
+["Mutton Gongura","https://i.imgur.com/0p2W8Vd.jpg",[550,1100,2200]],
+["Bhoti Gongura","https://i.imgur.com/KF1gFvd.jpg",[450,900,1800]],
+["Gongura Dry Prawns","https://i.imgur.com/6VjXjcg.jpg",[500,1000,2000]],
+["Pandugappa","https://i.imgur.com/wx5QZ7s.jpg",[450,900,1800]],
+["Royya Karapodi","https://i.imgur.com/YpZtF6h.jpg",[500,1000,2000]]
 ];
 
 let cart=[],total=0;
 
-document.addEventListener("DOMContentLoaded",()=>{
- const menu=document.getElementById("menu");
- items.forEach(i=>{
-  menu.innerHTML+=`
-  <div class="card">
-    <img src="https://source.unsplash.com/400x300/?${i[0]} food">
-    <h4>${i[0]}</h4>
-    <select onchange="addItem('${i[0]}',this.value)">
-      <option value="">Select Quantity</option>
-      <option value="${i[1][0]}">250g – ₹${i[1][0]}</option>
-      <option value="${i[1][1]}">500g – ₹${i[1][1]}</option>
-      <option value="${i[1][2]}">1kg – ₹${i[1][2]}</option>
-    </select>
-  </div>`;
- });
+const menu=document.getElementById("menu");
+items.forEach(i=>{
+ menu.innerHTML+=`
+ <div class="card">
+  <img src="${i[1]}" alt="${i[0]}">
+  <h4>${i[0]}</h4>
+  <select onchange="addItem('${i[0]}',this.value)">
+   <option value="">Select Quantity</option>
+   <option value="${i[2][0]}">250g – ₹${i[2][0]}</option>
+   <option value="${i[2][1]}">500g – ₹${i[2][1]}</option>
+   <option value="${i[2][2]}">1kg – ₹${i[2][2]}</option>
+  </select>
+ </div>`;
 });
 
 function addItem(item,price){
  if(!price)return;
  cart.push({item,price:Number(price)});
  total+=Number(price);
- renderCart();
+ render();
 }
-
-function renderCart(){
+function render(){
  const c=document.getElementById("cartItems");
  c.innerHTML="";
  cart.forEach((x,i)=>{
@@ -128,22 +188,25 @@ function renderCart(){
  });
  document.getElementById("total").innerText=total;
 }
-
 function removeItem(i){
  total-=cart[i].price;
  cart.splice(i,1);
- renderCart();
+ render();
 }
-
-function openCart(){document.getElementById("cartModal").style.display="block"}
-function closeCart(){document.getElementById("cartModal").style.display="none"}
-
+function openCart(){
+ document.getElementById("cartModal").style.display="block";
+}
+function closeCart(){
+ document.getElementById("cartModal").style.display="none";
+}
 function order(){
- const n=name.value,p=phone.value;
- if(!n||!p||cart.length===0){alert("Fill details");return;}
- let msg=`Order from Andhra Avakaya%0AName:${n}%0APhone:${p}%0A`;
+ if(!name.value||!phone.value||cart.length===0){
+  alert("Fill details & add items");
+  return;
+ }
+ let msg=`Order from Andhra Avakaya%0AName:${name.value}%0APhone:${phone.value}%0A`;
  cart.forEach(x=>msg+=`${x.item} ₹${x.price}%0A`);
- msg+=`Total ₹${total}`;
+ msg+=`Total ₹${total}%0A(Payment done via QR)`;
  window.open(`https://wa.me/919347934556?text=${msg}`);
 }
 </script>
